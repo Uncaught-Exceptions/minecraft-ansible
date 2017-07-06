@@ -1,0 +1,19 @@
+---
+backups_virtualenv_path: "{{ base_backup_folder }}/.venv"
+backup_script_location: "{{ base_backup_folder }}/backup.py"
+db_backup_folder: "{{ base_backup_folder }}/db"
+
+backups_log_folder: "{{ base_log_folder }}/backups"
+backups_log_file: "{{ backups_log_folder }}/backups.log"
+
+# backup script settings.
+backup_settings:
+  SWIFT_USERNAME: "{{ swift_username }}"
+  SWIFT_PASSWORD: "{{ swift_password }}"
+  SWIFT_MINE_DASH_BACKUP_CONTAINER: "{{ swift_mine_dash_backup_container }}"
+  SWIFT_MINECRAFT_BACKUP_CONTAINER: "{{ swift_minecraft_backup_container }}"
+  SWIFT_REGION_NAME: "{{ swift_region_name }}"
+  SWIFT_AUTH_URL: "{{ swift_auth_url }}"
+  SWIFT_PROJECT_NAME: "{{ swift_project_name }}"
+  SWIFT_DOMAIN_NAME: "{{ swift_domain_name }}"
+  DELETE_BACKUPS_AFTER: "{{ delete_backups_after }}"

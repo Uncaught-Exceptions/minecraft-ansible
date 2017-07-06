@@ -1,0 +1,19 @@
+---
+
+- name: upload the database backup
+  copy:
+    src: "files/{{ db_restore_file }}"
+    dest: "/tmp"
+  when: db_restore_file is defined and db_restore_file and db_result.changed
+  tags: db.backup
+
+- name: restore the database
+  become_user: postgres
+  shell: pg_restore -d {{ db_name }} /tmp/{{ db_restore_file }}
+  when: db_restore_file is defined and db_restore_file and db_result.changed
+
+- name: rm tmp db file
+  file:
+    state: absent
+    path: "~/tmp/{{ db_restore_file }}"
+  when: db_restore_file is defined and db_restore_file and db_result.changed

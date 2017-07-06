@@ -1,0 +1,7 @@
+---
+
+- name: ensure default ubuntu user is not present anymore
+  user:
+    name: ubuntu
+    state: absent
+    remove: yes

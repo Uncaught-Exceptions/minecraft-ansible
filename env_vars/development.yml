@@ -1,0 +1,88 @@
+---
+
+# Server User:
+server_user: "admin"
+# Password hash is for 'password'
+# python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.using(rounds=5000).hash(getpass.getpass())"
+server_user_password: "$1$17737183$xagqW7yIF3v7yFor8L5Fo1"
+
+
+# Minecraft server settings:
+ftb_server_download_url: https://addons-origin.cursecdn.com/files/2427/717/FTBBeyondServer_1.8.1.zip
+minecraft_server_icon: tailored_server.png
+
+minecraft_default_ops:
+  - name: some-op
+    uuid: some-uuid
+    level: 4
+    bypassesPlayerLimit: True
+
+minecraft_min_ram: 512M
+minecraft_max_ram: 4096M
+
+minecraft_max_players: 10
+minecraft_whitelist_enabled: true
+
+minecraft_world_backups_timer: 5.5
+minecraft_world_backups_compression_level: 1
+
+backup_minecraft_json: true
+backup_minecraft_to_object_storage: true
+
+
+# object-storage settings
+swift_username: "demo"
+swift_password: "openstack"
+swift_region_name: "RegionOne"
+swift_auth_url: "http://10.1.1.5:5000/v3"
+swift_project_name: "demo"
+swift_domain_name: Default
+
+
+# Database settings.
+db_user: "minedash"
+db_name: "minedash"
+db_password: password
+
+# Setup db cron dump job:
+db_backup_database_job: true
+
+# Domain
+web_base_domain: "example.com"
+
+
+# Nginx and letsencrypt settings:
+nginx_strong_dh_group: true
+nginx_use_letsencrypt: true
+letsencrypt_staging: true
+certbot_admin_email: "admin@example.com"
+
+
+# Gunicorn settings.
+gunicorn_num_workers: 3
+gunicorn_timeout_seconds: 300
+
+
+# Minedash settings.
+run_django_db_migrations: true
+run_django_collectstatic: true
+
+django_debug: "False"
+django_secret_key: 'z^vnz%ck3#(f49$_7m@887i@-ndbm)tto^%&8rwvdzfq8y$$3$'
+django_allowed_hosts:
+  - "*"
+
+wagtail_site_name: "Minedash"
+django_base_url: "https://example.com/"
+
+django_recaptcha_public_key: ""
+django_recaptcha_private_key: ""
+
+django_time_zone: "NZ"
+django_date_format: "j F, Y"
+django_datetime_format: "j F, Y, P"
+
+backup_site_media_job: true
+
+cron_minutes: "0"
+cron_hours: "12"

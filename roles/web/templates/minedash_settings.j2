@@ -1,0 +1,138 @@
+
+from __future__ import absolute_import, unicode_literals
+
+from .base import *
+
+DEBUG = {{ django_settings.DEBUG }}
+
+ALLOWED_HOSTS = [
+{% for host in django_settings.ALLOWED_HOSTS %}
+    '{{ host }}',
+{% endfor %}
+]
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '{{ django_settings.SECRET_KEY }}'
+
+# Database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '{{ django_settings.DATABASE_NAME }}',
+        'USER': '{{ django_settings.DATABASE_USER }}',
+        'PASSWORD': '{{ django_settings.DATABASE_PASSWORD }}',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+INSTALLED_APPS += [
+  'wagtail.contrib.postgres_search',
+]
+
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.contrib.postgres_search.backend',
+    },
+}
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': '{{ minedash_log_dir}}/minedash.log',
+            'when': 'midnight',
+            'backupCount': 30,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
+{% if object_storage_for_media or object_storage_for_static %}
+# object-storage settings:
+SWIFT_USERNAME = '{{ django_settings.SWIFT_USERNAME }}'
+SWIFT_PASSWORD = '{{ django_settings.SWIFT_PASSWORD }}'
+SWIFT_AUTH_URL = '{{ django_settings.SWIFT_AUTH_URL }}'
+SWIFT_PROJECT_NAME = '{{ django_settings.SWIFT_PROJECT_NAME }}'
+SWIFT_USER_DOMAIN_NAME = '{{ django_settings.SWIFT_USER_DOMAIN_NAME }}'
+SWIFT_PROJECT_DOMAIN_NAME = '{{ django_settings.SWIFT_PROJECT_DOMAIN_NAME }}'
+SWIFT_REGION_NAME = '{{ django_settings.SWIFT_REGION_NAME }}'
+SWIFT_CONTAINER_NAME = '{{ django_settings.SWIFT_CONTAINER_NAME }}'
+SWIFT_STATIC_CONTAINER_NAME = '{{ django_settings.SWIFT_STATIC_CONTAINER_NAME }}'
+SWIFT_AUTO_CREATE_CONTAINER = {{ django_settings.SWIFT_AUTO_CREATE_CONTAINER }}
+SWIFT_AUTO_CREATE_CONTAINER_PUBLIC = {{ django_settings.SWIFT_AUTO_CREATE_CONTAINER_PUBLIC }}
+SWIFT_AUTO_CREATE_CONTAINER_ALLOW_ORIGIN = '{{ django_settings.SWIFT_AUTO_CREATE_CONTAINER_ALLOW_ORIGIN }}'
+{% endif %}
+
+{% if object_storage_for_media %}
+DEFAULT_FILE_STORAGE ='swift.storage.SwiftStorage'
+{% else %}
+MEDIA_ROOT = "{{ nginx_media_dir }}"
+{% endif %}
+{% if object_storage_for_static %}
+STATICFILES_STORAGE = 'swift.storage.StaticSwiftStorage'
+COMPRESS_STORAGE ='swift.storage.StaticSwiftStorage'
+{% else %}
+STATIC_ROOT = "{{ nginx_static_dir }}"
+{% endif %}
+
+
+# Wagtail settings
+WAGTAIL_SITE_NAME = '{{ django_settings.WAGTAIL_SITE_NAME }}'
+
+TIME_ZONE = '{{ django_settings.TIME_ZONE }}'
+
+{% if django_settings.DATE_FORMAT %}
+DATE_FORMAT = '{{ django_settings.DATE_FORMAT }}'
+{% endif %}
+{% if django_settings.DATETIME_FORMAT %}
+DATETIME_FORMAT = '{{ django_settings.DATETIME_FORMAT }}'
+{% endif %}
+
+# Base URL to use when referring to full URLs within the Wagtail admin backend
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+BASE_URL = '{{ django_settings.BASE_URL }}'
+
+# Recaptcha settings
+RECAPTCHA_PUBLIC_KEY = '{{ django_settings.RECAPTCHA_PUBLIC_KEY }}'
+RECAPTCHA_PRIVATE_KEY = '{{ django_settings.RECAPTCHA_PRIVATE_KEY }}'
+
+RECAPTCHA_USE_SSL = True
+NOCAPTCHA = True
+
+#  Email settings
+{% if django_settings.EMAIL_BACKEND %}
+EMAIL_BACKEND = '{{ django_settings.EMAIL_BACKEND }}'
+{% endif %}
+{% if django_settings.EMAIL_HOST %}
+EMAIL_HOST = '{{ django_settings.EMAIL_HOST }}'
+{% endif %}
+{% if django_settings.EMAIL_PORT %}
+EMAIL_PORT = {{ django_settings.EMAIL_PORT }}
+{% endif %}
+{% if django_settings.EMAIL_USE_TLS %}
+EMAIL_USE_TLS = {{ django_settings.EMAIL_USE_TLS }}
+{% endif %}
+{% if django_settings.DEFAULT_FROM_EMAIL %}
+DEFAULT_FROM_EMAIL = '{{ django_settings.DEFAULT_FROM_EMAIL }}'
+{% endif %}
+{% if django_settings.EMAIL_HOST_USER %}
+EMAIL_HOST_USER = '{{ django_settings.EMAIL_HOST_USER }}'
+{% endif %}
+{% if django_settings.EMAIL_HOST_PASSWORD %}
+EMAIL_HOST_PASSWORD = '{{ django_settings.EMAIL_HOST_PASSWORD }}'
+{% endif %}
+
+MINECRAFT_SERVER_URL = "{{ django_settings.MINECRAFT_SERVER_URL }}"
+MINECRAFT_WHITELIST_LOCATION = "{{ minecraft_whitelist_file }}"

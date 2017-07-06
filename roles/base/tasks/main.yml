@@ -1,0 +1,69 @@
+---
+- name: Ensure bash, OpenSSL, and libssl are the latest versions
+  apt: name={{ item }} update_cache={{ update_apt_cache }} state=latest
+  with_items:
+    - bash
+    - openssl
+    - libssl-dev
+    - libssl-doc
+  tags: packages
+
+- name: Install base packages
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - build-essential
+    - acl
+    - ntp
+    - htop
+    - git
+    - libpq-dev
+    - supervisor
+    - unzip
+  tags: packages
+
+- name: Install Python 3.5 and related packages
+  apt: name={{ item }} update_cache={{ update_apt_cache }} state=present
+  with_items:
+    - python3-psycopg2
+    - python3-dev
+    - python3-pip
+    - ipython
+  tags: packages
+
+- name: Upgrade pip
+  pip: name=pip state=latest
+  tags: packages
+
+- name: Install virtualenv
+  pip: name=virtualenv
+  tags: packages
+
+# For silly situations such as when a provider blocks ipv6 smtp
+# or has limited ipv6 support
+- name: Setup ipv4 as default for dns
+  when: ipv4_dns_as_default is defined and ipv4_dns_as_default
+  lineinfile:
+    path: /etc/gai.conf
+    line: 'precedence ::ffff:0:0/96  100'
+    state: present
+
+- name: Create the logs group
+  group: name={{ logging_group }} system=yes state=present
+
+- name: create base folder
+  file:
+    path: "{{ base_folder }}"
+    state: directory
+
+- name: create backup folder
+  file:
+    path: "{{ base_backup_folder }}"
+    state: directory
+    mode: 0775
+
+- name: create logs folder
+  file:
+    path: "{{ base_log_folder }}"
+    state: directory
+    group: "{{ logging_group }}"
+    mode: 0775

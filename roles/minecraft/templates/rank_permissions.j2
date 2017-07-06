@@ -1,0 +1,61 @@
+{
+  "default_ranks": {
+    "player": "player", {# everyone who isn't OP is assigned the player group #}
+    "op": "admin" {# OPs's get the admin group #}
+  },
+  "ranks": {
+    "player": {
+        {# parent means it will inherit from this group, in this case the
+           builtin_player group (see Default Groups) #}
+        "parent": "builtin_player",
+        "permissions": [
+          {#  plus symbol adds a permission #}
+          "+ftbu.claims.block.edit.gravestone.gravestone" {# , #}
+          {# minus symbol removes a permission #}
+          {# "-ftbu.claims.upgrade.no_explosions", #}
+          {# "-ftbu.claims.upgrade.no_pvp" #}
+        ],
+        "config": {
+          "ftbu.chunkloader.max_chunks": {{ minecraft_player_loaded_chunks }},
+          {# NOT IMPLEMENTED YET "ftbu.chunkloader.offline_timer": 12.0, #}
+          "ftbu.claims.max_chunks": {{ minecraft_player_claimed_chunks }}
+        }
+    },
+    "vip": {
+        "parent": "player",
+        "syntax": "<&b$name&r> ",
+        "config": {
+          "ftbu.chunkloader.max_chunks": {{ minecraft_vip_loaded_chunks }},
+          {# NOT IMPLEMENTED YET "ftbu.chunkloader.offline_timer": 48.0, #}
+          "ftbu.claims.max_chunks": {{ minecraft_vip_claimed_chunks }}
+        }
+    },
+    "admin": {
+        {# Inherits from the builtin_op group #}
+        "parent": "builtin_op",
+        {# How their username will be displayed in chat #}
+        "syntax": "<&2$name&r> ",
+        "permissions": [
+          {# adds (plus) all perms, star is a wildcard #}
+          "+*"
+        ],
+        "config": {
+          "ftbu.chunkloader.max_chunks": {{ minecraft_admin_loaded_chunks }},
+          {# NOT IMPLEMENTED YET "ftbu.chunkloader.offline_timer": 96.0, #}
+          "ftbu.claims.max_chunks": {{ minecraft_admin_claimed_chunks }}
+        }
+    },
+    "overlord": {
+        "parent": "builtin_op",
+        "syntax": "<&5$name&r> ",
+        "permissions": [
+          "+*"
+        ],
+        "config": {
+          "ftbu.chunkloader.max_chunks": {{ minecraft_overlord_loaded_chunks }},
+          {# NOT IMPLEMENTED YET "ftbu.chunkloader.offline_timer": 96.0, #}
+          "ftbu.claims.max_chunks": {{ minecraft_overlord_claimed_chunks }}
+        }
+    }
+  }
+}

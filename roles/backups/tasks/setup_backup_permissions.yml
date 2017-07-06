@@ -1,0 +1,11 @@
+---
+
+- name: Ensure that the backup file permissions are set properly
+  file:
+    path: "{{ base_backup_folder }}"
+    recurse: yes
+    owner: "{{ backups_user }}"
+    group: "{{ backups_group }}"
+    state: directory
+    mode: 0770
+  tags: backups

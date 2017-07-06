@@ -1,0 +1,7 @@
+[program:minecraft]
+command = {{ minecraft_server_folder }}/ServerStart.sh
+user = {{ minecraft_user }}
+stdout_logfile = {{ minecraft_log_file }}
+redirect_stderr = true
+autorestart=true
+startretries=3

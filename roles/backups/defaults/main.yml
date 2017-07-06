@@ -1,0 +1,28 @@
+---
+
+backups_user: backups
+
+db_backup_database_job: false
+backup_minecraft_json: false
+db_backup_database_to_object_storage: false
+backup_minecraft_to_object_storage: false
+
+swift_mine_dash_backup_container: "minedash-backups"
+swift_minecraft_backup_container: "minecraft-backups"
+
+# In days
+delete_backups_after: 30
+
+backups_python_version: python3.5
+
+postgres_user: postgres
+
+db_backup_cron_minute: "0"
+db_backup_cron_hour: "*/12"
+
+mc_json_cron_minute: "0"
+mc_json_cron_hour: "*/2"
+
+# Script should run hourly to catch all backups and delete old ones
+script_cron_minute: "30"
+script_cron_hour: "*"

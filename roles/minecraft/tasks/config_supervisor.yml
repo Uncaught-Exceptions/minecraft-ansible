@@ -1,0 +1,26 @@
+---
+
+- name: Create the Supervisor config file for the server
+  template: src=supervisor_server_config.j2
+            dest=/etc/supervisor/conf.d/minecraft.conf
+
+- name: Setup server logrotate
+  template: src=minecraft_logrotate.j2
+            dest=/etc/logrotate.d/minecraft
+
+- name: Setup java error logrotate
+  template: src=minecraft_errors_logrotate.j2
+            dest=/etc/logrotate.d/minecraft_errors
+
+- name: Ensure that the application file permissions are set properly
+  file: path={{ minecraft_server_folder }}
+        recurse=yes
+        owner={{ minecraft_user }}
+        group={{ minecraft_group }}
+        state=directory
+
+- name: Re-read the Supervisor config files
+  supervisorctl: name=minecraft state=present
+
+- name: Restart Supervisor
+  supervisorctl: name=minecraft state=restarted

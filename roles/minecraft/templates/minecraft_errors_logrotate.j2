@@ -1,0 +1,10 @@
+{{ minecraft_log_folder }}/hs_err_pid*.log {
+	su {{ minecraft_user }} {{ minecraft_group }}
+	daily
+	missingok
+	rotate 5
+	compress
+	delaycompress
+	notifempty
+	copytruncate
+}

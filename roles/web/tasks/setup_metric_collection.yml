@@ -1,0 +1,10 @@
+---
+
+- name: setup metrics collection cron
+  cron:
+    name: "minedash collection run"
+    minute: "{{ metrics_cron_minute }}"
+    hour: "{{ metrics_cron_hour }}"
+    user: "{{ gunicorn_user }}"
+    job: "cd {{ project_path }} && {{ virtualenv_path }}/bin/python collect_samples.py"
+  tags: metrics

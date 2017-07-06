@@ -1,0 +1,31 @@
+---
+
+- name: Create the virtualenv
+  command: virtualenv -p {{ backups_python_version }} {{ backups_virtualenv_path }}
+           creates={{ backups_virtualenv_path }}/bin/activate
+
+- name: Ensure swiftclient is installed
+  pip: virtualenv={{ backups_virtualenv_path }} name=python-swiftclient
+
+- name: Ensure keystoneauth is installed
+  pip: virtualenv={{ backups_virtualenv_path }} name=keystoneauth1
+
+- name: Setup backups logrotate
+  template: src=backups_logrotate.j2
+            dest=/etc/logrotate.d/backups
+
+- name: Create the object storage backup script
+  template: src=backup_script.j2
+            dest={{ backup_script_location }}
+            owner={{ backups_user }}
+            group={{ backups_group }}
+            mode=0700
+  tags: backups
+
+- cron:
+    name: "backup to object-storage"
+    minute: "{{ script_cron_minute }}"
+    hour: "{{ script_cron_hour }}"
+    user: "{{ backups_user }}"
+    job: "{{ backups_virtualenv_path }}/bin/python3.5 {{ backup_script_location }}"
+  tags: backups

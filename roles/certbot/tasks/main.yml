@@ -1,0 +1,44 @@
+---
+
+- name: Add certbot repo
+  apt_repository:
+    repo: ppa:certbot/certbot
+  when: nginx_use_letsencrypt
+
+- name: Update repositories cache and install certbot
+  apt:
+    name: certbot
+    update_cache: yes
+  when: nginx_use_letsencrypt
+
+- name: Check if Nginx exists
+  stat: path=/etc/init.d/nginx
+  register: nginx_status
+  when: nginx_use_letsencrypt
+
+- name: Ensure Nginx is stopped
+  service: name=nginx state=stopped
+  when: nginx_use_letsencrypt and nginx_status.stat.exists
+
+- name: Install certbot and generate cert
+  command: "certbot certonly --noninteractive --agree-tos --standalone --email {{ certbot_admin_email }} -d {{ web_base_domain }}"
+  args:
+    creates: "{{ certbot_output_dir }}"
+  when: nginx_use_letsencrypt and not letsencrypt_staging
+
+- name: Install certbot and generate cert via staging
+  command: "certbot certonly --noninteractive --agree-tos --staging --standalone --email {{ certbot_admin_email }} -d {{ web_base_domain }}"
+  args:
+    creates: "{{ certbot_output_dir }}"
+  when: nginx_use_letsencrypt and letsencrypt_staging
+
+- name: Ensure Nginx is started
+  service: name=nginx state=started
+  when: nginx_status.stat.exists
+
+- name: Ensure a cron job to auto-renew the cert exists
+  cron: name="daily auto renew cert"
+        special_time=daily
+        job="certbot renew --standalone --no-self-upgrade --pre-hook \"service nginx stop\" --post-hook \"service nginx start\" --quiet"
+        state=present
+  when: certbot_auto_renew and nginx_use_letsencrypt

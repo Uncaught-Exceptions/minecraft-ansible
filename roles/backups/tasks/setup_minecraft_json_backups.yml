@@ -1,0 +1,9 @@
+---
+
+- cron:
+    name: "minecraft json tar job"
+    minute: "{{ mc_json_cron_minute }}"
+    hour: "{{ mc_json_cron_hour }}"
+    user: "{{ minecraft_user }}"
+    job: /bin/tar -czf {{ minecraft_json_backups_folder }}/mc_json_`/bin/date "+\%Y-\%m-\%dT\%H-\%M-\%S"`.tar.gz -C {{ minecraft_server_folder }} ops.json whitelist.json banned-players.json banned-ips.json local/ftbu/player_ranks.json
+  tags: backups

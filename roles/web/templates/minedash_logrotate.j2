@@ -1,0 +1,10 @@
+{{ minedash_log_file }} {
+	su {{ gunicorn_user }} {{ gunicorn_group }}
+	daily
+	missingok
+	rotate 30
+	compress
+	delaycompress
+	notifempty
+	copytruncate
+}

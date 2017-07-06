@@ -1,0 +1,22 @@
+---
+
+- include: install_packages.yml
+  tags: minecraft
+
+- include: setup_users_and_folders.yml
+  tags: minecraft
+
+- include: setup_server.yml
+  tags: minecraft
+
+- include: restore_server_backups.yml
+  tags: minecraft
+
+- include: config_server.yml
+  tags: minecraft
+
+- include: config_supervisor.yml
+  tags: minecraft
+
+- include: set_file_permissions.yml
+  tags: minecraft

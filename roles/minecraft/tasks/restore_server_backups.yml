@@ -1,0 +1,21 @@
+---
+
+- name: check for existing world folder
+  stat:
+    path: "{{ minecraft_server_folder }}/world"
+  register: world
+  when: minecraft_world_backup_file is defined and minecraft_world_backup_file
+
+- name: unarchive world backup on server
+  unarchive:
+    src: "files/{{ minecraft_world_backup_file }}"
+    dest: "{{ minecraft_server_folder }}"
+  when: minecraft_world_backup_file is defined and minecraft_world_backup_file
+        and world.stat.isdir is not defined
+
+- name: unarchive json backup on server
+  unarchive:
+    src: "files/{{ minecraft_json_backup_file }}"
+    dest: "{{ minecraft_server_folder }}"
+    keep_newer: yes
+  when: minecraft_json_backup_file is defined and minecraft_json_backup_file

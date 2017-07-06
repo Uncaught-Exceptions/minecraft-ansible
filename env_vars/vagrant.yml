@@ -1,0 +1,73 @@
+---
+
+# Minecraft server settings:
+ftb_server_download_url: https://addons-origin.cursecdn.com/files/2427/717/FTBBeyondServer_1.8.1.zip
+minecraft_server_icon: tailored_server.png
+
+minecraft_default_ops:
+  - name: some-op
+    uuid: some-uuid
+    level: 4
+    bypassesPlayerLimit: True
+
+minecraft_min_ram: 512M
+minecraft_max_ram: 4096M
+
+minecraft_max_players: 10
+minecraft_whitelist_enabled: true
+
+minecraft_world_backups_timer: 5.5
+minecraft_world_backups_compression_level: 1
+
+backup_minecraft_json: true
+backup_minecraft_to_object_storage: true
+
+
+# object-storage settings
+swift_username: "demo"
+swift_password: "openstack"
+swift_region_name: "RegionOne"
+swift_auth_url: "http://10.1.1.5:5000/v3"
+swift_project_name: "demo"
+swift_domain_name: Default
+
+
+
+# Database settings.
+db_user: "minedash"
+db_name: "minedash"
+db_password: password
+
+# Setup db cron dump job:
+db_backup_database_job: true
+db_backup_database_to_object_storage: true
+
+
+# Gunicorn settings. For the number of workers, a good rule to follow is
+# 2 x number of CPUs + 1
+gunicorn_num_workers: 3
+
+
+# Nginx settings.
+web_base_domain: 10.1.1.10
+nginx_strong_dh_group: no
+
+
+# Application settings.
+object_storage_for_media: true
+object_storage_for_static: true
+
+django_debug: "True"
+django_secret_key: "akr2icmg1n8%z^3fe3c+)5d0(t^cy-2_25rrl35a7@!scna^1#"
+django_allowed_hosts:
+  - "*"
+
+wagtail_site_name: "MineDash"
+django_base_url: "http://10.1.1.10/"
+
+django_recaptcha_public_key: ""
+django_recaptcha_private_key: ""
+
+django_time_zone: "NZ"
+django_date_format: "j F, Y"
+django_datetime_format: "j F, Y, P"

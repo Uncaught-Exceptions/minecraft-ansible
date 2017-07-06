@@ -1,0 +1,17 @@
+---
+
+- name: Ensure that the application file permissions are set properly
+  file: path={{ virtualenv_path }}
+        recurse=yes
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        state=directory
+  notify: restart application
+
+- name: Ensure that the application log permissions are set properly
+  file: path={{ minedash_log_dir }}
+        recurse=yes
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        state=directory
+  notify: restart application

@@ -1,0 +1,10 @@
+{{ minecraft_log_file }} {
+	su {{ minecraft_user }} {{ minecraft_group }}
+	daily
+	missingok
+	rotate 30
+	compress
+	delaycompress
+	notifempty
+	copytruncate
+}

@@ -1,0 +1,16 @@
+---
+
+- name: Setup basic security settings for a Minedash/Minecraft web server
+  hosts: all
+  become: yes
+  remote_user: ubuntu
+  become_user: root
+
+  vars:
+    - update_apt_cache: yes
+  vars_files:
+    - env_vars/base.yml
+    - "{{ env }}"
+
+  roles:
+    - security

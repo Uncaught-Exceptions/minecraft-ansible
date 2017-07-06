@@ -1,0 +1,59 @@
+---
+
+- name: ensure we have a server source file
+  fail:
+    msg: Must define download_ftb_server or local_minecraft_server_file
+  when: local_minecraft_server_file is not defined
+        and ftb_server_download_url is not defined
+
+- name: Download FTB server
+  get_url:
+    url: "{{ ftb_server_download_url }}"
+    dest: "{{ minecraft_server_folder }}/{{ server_file_name }}"
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+    mode: 0740
+  when: ftb_server_download_url is defined and ftb_server_download_url
+  register: server_downloaded
+
+- name: unarchive FTB server
+  unarchive:
+    src: "{{ minecraft_server_folder }}/{{ server_file_name }}"
+    dest: "{{ minecraft_server_folder }}"
+    remote_src: True
+  when: ftb_server_download_url is defined and ftb_server_download_url
+        and server_downloaded.changed
+
+- name: copy FTB server from local
+  unarchive:
+    src: "files/{{ minecraft_local_server_file }}"
+    dest: "{{ minecraft_server_folder }}"
+  when: minecraft_local_server_file is defined and minecraft_local_server_file
+  register: server_copied
+
+- name: setup install file as executable
+  file:
+    path: "{{ minecraft_server_folder }}/FTBInstall.sh"
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+    mode: 0740
+
+- name: setup server file as executable
+  file:
+    path: "{{ minecraft_server_folder }}/ServerStart.sh"
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+    mode: 0740
+
+- name: Ensure server start properly kills process before restarting
+  lineinfile:
+    dest: "{{ minecraft_server_folder }}/ServerStart.sh"
+    line: "fuser -k -TERM -n tcp {{ minecraft_server_port }}"
+    regexp: "^fuser -k -TERM -n tcp {{ minecraft_server_port }}$"
+    state: present
+    insertafter: ^#!/bin/sh$
+
+- name: install FTB server
+  shell: "{{ minecraft_server_folder }}/FTBInstall.sh"
+  when: server_downloaded is defined and server_downloaded.changed or
+        server_copied is defined and server_copied.changed

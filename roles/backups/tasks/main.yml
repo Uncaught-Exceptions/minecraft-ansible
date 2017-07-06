@@ -1,0 +1,22 @@
+---
+
+- include: setup_backup_user_and_folders.yml
+  when: db_backup_database_job or backup_minecraft_json
+  tags: backups
+
+- include: setup_database_backup.yml
+  when: db_backup_database_job
+  tags: database backups
+
+- include: setup_minecraft_json_backups.yml
+  when: backup_minecraft_json
+  tags: minecraft backups
+
+- include: setup_backups_to_object_storage.yml
+  when: db_backup_database_job and db_backup_database_to_object_storage or
+        backup_minecraft_json and backup_minecraft_to_object_storage
+  tags: object-storage backups
+
+- include: setup_backup_permissions.yml
+  when: db_backup_database_job or backup_minecraft_json
+  tags: backups

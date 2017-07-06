@@ -1,0 +1,42 @@
+---
+
+- name: Create the backup group
+  group: name={{ backups_group }} system=yes state=present
+  tags: backups
+
+- name: Create the backups user
+  user:
+    name: "{{ backups_user }}"
+    state: present
+    group: "{{ backups_group }}"
+    groups:
+      - "{{ logging_group }}"
+
+- name: Add the minecraft user to the backups group
+  user: name={{ minecraft_user }} groups={{ backups_group }} append=yes
+  tags: backups
+
+- name: Add the postgres user to the backups group
+  user: name={{ postgres_user }} groups={{ backups_group }} append=yes
+  tags: backups
+
+- name: ensure backup folder exists
+  file:
+    path: "{{ base_backup_folder }}"
+    state: directory
+  tags: backups
+
+- name: ensure backup log folder exists
+  file:
+    path: "{{ backups_log_folder }}"
+    state: directory
+    owner: "{{ backups_user }}"
+    group: "{{ logging_group }}"
+    mode: 0774
+  tags: backups
+
+- name: setup db backup folder
+  file:
+    path: "{{ db_backup_folder }}"
+    state: directory
+  tags: backups

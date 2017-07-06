@@ -1,0 +1,22 @@
+---
+
+- name: Provision a Minedash/Minecraft server
+  hosts: all
+  become: yes
+  remote_user: "{{ server_user }}"
+  become_user: root
+  vars:
+    - update_apt_cache: yes
+  vars_files:
+    - env_vars/base.yml
+    - "{{ env }}"
+
+  roles:
+    - base
+    - security-followup
+    - certbot
+    - minecraft
+    - db
+    - web
+    - backups
+    - nginx

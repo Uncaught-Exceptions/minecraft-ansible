@@ -1,0 +1,8 @@
+base_folder: "/opt/minecraft"
+base_backup_folder: "{{ base_folder }}/backups"
+base_log_folder: "{{ base_folder }}/logs"
+
+backups_group: backups
+logging_group: logging
+
+ipv4_dns_as_default: false

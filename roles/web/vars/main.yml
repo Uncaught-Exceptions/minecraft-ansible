@@ -1,0 +1,60 @@
+---
+
+# Application settings.
+virtualenv_path: "{{ base_folder }}/web"
+project_path: "{{ virtualenv_path }}/minedash"
+settings_file_path: "{{ project_path }}/minedash/settings/production.py"
+minedash_log_dir: "{{ base_log_folder }}/web"
+minedash_log_file: "{{ minedash_log_dir }}/gunicorn_supervisor.log"
+requirements_file: "{{ project_path }}/requirements.txt"
+
+
+# Gunicorn settings.
+gunicorn_user: minedash
+gunicorn_group: webapps
+
+
+# Nginx settings.
+nginx_access_log_file: "{{ minedash_log_dir }}/nginx_access.log"
+nginx_error_log_file: "{{ minedash_log_dir }}/nginx_error.log"
+nginx_static_dir: "{{ virtualenv_path }}/static/"
+nginx_media_dir: "{{ virtualenv_path }}/media/"
+
+
+# Django settings variables.
+django_settings:
+  MINECRAFT_SERVER_URL: "{{ web_base_domain }}"
+  DEBUG: "{{ django_debug }}"
+  SECRET_KEY: "{{ django_secret_key }}"
+  ALLOWED_HOSTS: "{{ django_allowed_hosts }}"
+  SWIFT_USERNAME: "{{ swift_username }}"
+  SWIFT_PASSWORD: "{{ swift_password }}"
+  SWIFT_AUTH_URL: "{{ swift_auth_url }}"
+  SWIFT_PROJECT_NAME: "{{ swift_project_name }}"
+  SWIFT_USER_DOMAIN_NAME: "{{ swift_domain_name }}"
+  SWIFT_PROJECT_DOMAIN_NAME: "{{ swift_domain_name }}"
+  SWIFT_REGION_NAME: "{{ swift_region_name }}"
+  SWIFT_CONTAINER_NAME: "{{ swift_container_name }}"
+  SWIFT_STATIC_CONTAINER_NAME: "{{ swift_static_container_name }}"
+  SWIFT_AUTO_CREATE_CONTAINER: "{{ swift_auto_create_container }}"
+  SWIFT_AUTO_CREATE_CONTAINER_PUBLIC: "{{ swift_auto_create_container_public }}"
+  SWIFT_AUTO_CREATE_CONTAINER_ALLOW_ORIGIN: "{{ swift_auto_create_container_allow_origin }}"
+  MEDIA_ROOT: "{{ nginx_media_dir }}"
+  STATIC_ROOT: "{{ nginx_static_dir }}"
+  DATABASE_NAME: "{{ db_name }}"
+  DATABASE_USER: "{{ db_user }}"
+  DATABASE_PASSWORD: "{{ db_password }}"
+  WAGTAIL_SITE_NAME: "{{ wagtail_site_name }}"
+  TIME_ZONE: "{{ django_time_zone }}"
+  DATE_FORMAT: "{{ django_date_format }}"
+  DATETIME_FORMAT: "{{ django_datetime_format }}"
+  BASE_URL: "{{ django_base_url }}"
+  RECAPTCHA_PUBLIC_KEY: "{{ django_recaptcha_public_key }}"
+  RECAPTCHA_PRIVATE_KEY: "{{ django_recaptcha_private_key }}"
+  EMAIL_BACKEND:  "{{ django_email_backend }}"
+  EMAIL_HOST: "{{ django_email_host }}"
+  EMAIL_PORT: "{{ django_email_port }}"
+  EMAIL_USE_TLS: "{{ django_email_use_tls }}"
+  DEFAULT_FROM_EMAIL: "{{ django_default_from_email }}"
+  EMAIL_HOST_USER: "{{ django_email_host_user }}"
+  EMAIL_HOST_PASSWORD: "{{ django_email_host_password }}"

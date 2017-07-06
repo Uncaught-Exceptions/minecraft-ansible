@@ -1,0 +1,9 @@
+---
+
+- name: restore media files from backup
+  unarchive:
+    src: "files/{{ media_files_restore_file }}"
+    dest: "{{ virtualenv_path }}"
+  when: media_files_restore_file is defined and media_files_restore_file and
+        not object_storage_for_media
+  tags: media.backup

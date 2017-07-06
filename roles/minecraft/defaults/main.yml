@@ -1,0 +1,42 @@
+
+server_file_name: server.zip
+
+minecraft_user: minecraft
+minecraft_group: minecraft
+
+minecraft_server_port: 25565
+
+minecraft_min_ram: 512M
+minecraft_max_ram: 4096M
+
+minecraft_world_backups_timer: 5.5
+minecraft_world_backups_to_keep: 12.0
+minecraft_world_backups_compression_level: 2
+
+minecraft_auto_restart: false
+minecraft_restart_timer: 12.0
+
+minecraft_view_distance: 10
+
+minecraft_safe_spawn: true
+minecraft_spawn_protection: 16
+minecraft_pvp: false
+minecraft_hardcore: false
+minecraft_difficulty: 2
+
+minecraft_player_claimed_chunks: 50
+minecraft_player_loaded_chunks: 25
+
+minecraft_vip_claimed_chunks: 100
+minecraft_vip_loaded_chunks: 50
+
+minecraft_admin_claimed_chunks: 300
+minecraft_admin_loaded_chunks: 100
+
+minecraft_overlord_claimed_chunks: 500
+minecraft_overlord_loaded_chunks: 200
+
+minecraft_max_players: 20
+minecraft_whitelist_enabled: false
+minecraft_server_motd: A Minecraft Server
+minecraft_login_motd: Welcome!

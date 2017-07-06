@@ -1,0 +1,5 @@
+export JAVACMD="java"
+export MIN_RAM="{{ minecraft_min_ram }}"        # -Xms
+export MAX_RAM="{{ minecraft_max_ram }}"       # -Xmx
+export PERMGEN_SIZE="256M"   # -XX:PermSize
+export JAVA_PARAMETERS="-XX:ErrorFile={{ minecraft_log_folder }}/hs_err_pid%p.log -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dfml.queryResult=confirm"

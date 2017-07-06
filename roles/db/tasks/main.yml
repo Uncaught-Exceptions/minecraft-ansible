@@ -1,0 +1,7 @@
+---
+
+- include: create_database.yml
+  tags: database
+
+- include: restore_database_backup.yml
+  tags: database restore

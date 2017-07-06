@@ -1,0 +1,9 @@
+---
+
+- cron:
+    name: "dump db"
+    minute: "{{ db_backup_cron_minute }}"
+    hour: "{{ db_backup_cron_hour }}"
+    user: "{{ postgres_user }}"
+    job: /usr/bin/pg_dump -Fc {{ db_name }} > {{db_backup_folder}}/{{ db_name }}_`/bin/date "+\%Y-\%m-\%dT\%H-\%M-\%S"`.dump
+  tags: backups

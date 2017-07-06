@@ -1,0 +1,43 @@
+---
+
+- name: Setup local-settings file
+  template: src=server_settings.j2
+            dest={{ minecraft_server_folder }}/settings-local.sh
+
+- name: agree to the eula
+  lineinfile:
+    path: "{{ minecraft_server_folder }}/eula.txt"
+    regexp: '^eula=false'
+    line: 'eula=true'
+    backrefs: yes
+
+- name: Setup server properties
+  template: src=server_properties.j2
+            dest={{ minecraft_server_folder }}/server.properties
+
+- name: Setup ftb utils config
+  template: src=ftbu_config.j2
+            dest={{ minecraft_server_folder }}/local/ftbu/config.json
+
+- name: Setup ftb utils rank permissions
+  template: src=rank_permissions.j2
+            dest={{ minecraft_server_folder }}/local/ftbu/ranks.json
+
+- name: Setup ops check script
+  template: src=ops_script.j2
+            dest={{ minecraft_server_folder }}/confirm_ops.py
+            mode=0740
+  when: minecraft_default_ops is defined and minecraft_default_ops
+
+- name: run ops confirm script
+  shell: python confirm_ops.py
+  args:
+    chdir: "{{ minecraft_server_folder }}"
+  when: minecraft_default_ops is defined and minecraft_default_ops
+
+- name: setup server icon
+  copy:
+    src: "files/{{ minecraft_server_icon }}"
+    dest: "{{ minecraft_server_folder }}/server-icon.png"
+    force: yes
+  when: minecraft_server_icon is defined and minecraft_server_icon

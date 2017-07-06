@@ -1,0 +1,8 @@
+
+minecraft_server_folder: "{{ base_folder }}/server"
+minecraft_log_folder: "{{ base_log_folder }}/server"
+minecraft_log_file: "{{ minecraft_log_folder }}/server.log"
+minecraft_backups_folder: "{{ base_backup_folder }}/minecraft"
+minecraft_world_backups_folder: "{{ minecraft_backups_folder }}/world"
+minecraft_json_backups_folder: "{{ minecraft_backups_folder }}/json"
+minecraft_whitelist_file: "{{ minecraft_server_folder }}/whitelist.json"

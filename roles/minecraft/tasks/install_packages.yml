@@ -1,0 +1,5 @@
+---
+- name: Java is installed
+  apt: name={{ item }} update_cache={{ update_apt_cache }} state=latest
+  with_items:
+    - default-jre

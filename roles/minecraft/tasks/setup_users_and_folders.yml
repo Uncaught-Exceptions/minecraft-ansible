@@ -1,0 +1,55 @@
+---
+
+
+- name: Create the minecraft group
+  group: name={{ minecraft_group }} system=yes state=present
+
+- name: Create the minecraft user
+  user: name={{ minecraft_user }} state=present
+
+- name: Create the minecraft user
+  user:
+    name: "{{ minecraft_user }}"
+    state: present
+    group: "{{ minecraft_group }}"
+    groups:
+      - "{{ logging_group }}"
+
+- name: create minecraft server folder
+  file:
+    path: "{{ minecraft_server_folder }}"
+    state: directory
+
+- name: create minecraft log folder
+  file:
+    path: "{{ minecraft_log_folder }}"
+    state: directory
+    owner: "{{ minecraft_user }}"
+    group: "{{ logging_group }}"
+    mode: 0774
+
+- name: create minecraft base backups folder
+  file:
+    path: "{{ minecraft_backups_folder }}"
+    state: directory
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+
+- name: create minecraft world backups folder
+  file:
+    path: "{{ minecraft_world_backups_folder }}"
+    state: directory
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+
+- name: create minecraft json backups folder
+  file:
+    path: "{{ minecraft_json_backups_folder }}"
+    state: directory
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+
+- name: create ftbu config folder
+  file:
+    path: "{{ minecraft_server_folder }}/local/ftbu/"
+    state: directory

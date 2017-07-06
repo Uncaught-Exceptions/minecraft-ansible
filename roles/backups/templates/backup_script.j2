@@ -1,0 +1,110 @@
+from datetime import datetime, timedelta
+import logging
+import os
+import sys
+
+from keystoneauth1.identity import generic
+from keystoneauth1 import session as ksession
+
+import swiftclient
+from swiftclient import ClientException
+
+
+log = logging.getLogger("backups")
+log.propagate = False
+file_hdlr = logging.FileHandler('{{ backups_log_file }}')
+formatter = logging.Formatter(
+    '(%(asctime)s) - %(levelname)s - %(message)s')
+file_hdlr.setFormatter(formatter)
+log.addHandler(file_hdlr)
+log.setLevel(logging.INFO)
+
+BACKUP_DB_DIR = '{{ db_backup_folder }}'
+BACKUP_MINECRAFT_WORLD_DIR = '{{ minecraft_world_backups_folder }}'
+BACKUP_MINECRAFT_JSON_DIR = '{{ minecraft_json_backups_folder }}'
+
+DB_CONTAINER_NAME = '{{ backup_settings.SWIFT_MINE_DASH_BACKUP_CONTAINER }}'
+MINECRAFT_CONTAINER_NAME = '{{ backup_settings.SWIFT_MINECRAFT_BACKUP_CONTAINER }}'
+
+DELETE_BACKUPS_AFTER = {{ backup_settings.DELETE_BACKUPS_AFTER }}
+
+now = datetime.utcnow()
+delete_after = now - timedelta(days=DELETE_BACKUPS_AFTER)
+
+try:
+    kwargs = {
+            'username': '{{ backup_settings.SWIFT_USERNAME }}',
+            'password': '{{ backup_settings.SWIFT_PASSWORD }}',
+            'auth_url': '{{ backup_settings.SWIFT_AUTH_URL }}',
+            'project_name': '{{ backup_settings.SWIFT_PROJECT_NAME }}',
+            'project_domain_name': '{{ backup_settings.SWIFT_DOMAIN_NAME }}',
+            'user_domain_name': '{{ backup_settings.SWIFT_DOMAIN_NAME }}',
+        }
+    auth = generic.Password(**kwargs)
+    session = ksession.Session(auth=auth)
+    swift = swiftclient.Connection(
+        os_options={'region_name': '{{ backup_settings.SWIFT_REGION_NAME }}'},
+        session=session)
+except Exception:
+    log.exception("Error during auth and swiftclient setup.")
+    sys.exit()
+
+try:
+    for container_name in [DB_CONTAINER_NAME, MINECRAFT_CONTAINER_NAME]:
+        try:
+            headers, objects = swift.get_container(container_name)
+            log.info("container %s exists." % container_name)
+
+            for object in objects:
+                last_modified = datetime.strptime(
+                    object['last_modified'], "%Y-%m-%dT%H:%M:%S.%f")
+                if last_modified < delete_after:
+                    try:
+                        swift.delete_object(container_name, object['name'])
+                        log.info("Object %s deleted." % object['name'])
+                    except ClientException as err:
+                        if err.http_status == 404:
+                            log.info(
+                                "Object %s deleted with 404." % object['name'])
+        except ClientException as err:
+            if err.http_status == 404:
+                swift.put_container(container_name)
+                log.info("container %s created." % container_name)
+except Exception:
+    log.exception("Error during container check/create, or delete of expired.")
+    sys.exit()
+
+try:
+    for file in os.listdir(BACKUP_DB_DIR):
+        upload_name = "database/%s" % file
+        with open("%s/%s" % (BACKUP_DB_DIR, file), 'rb') as content:
+            swift.put_object(DB_CONTAINER_NAME, upload_name, content)
+        os.remove("%s/%s" % (BACKUP_DB_DIR, file))
+        log.info("Uploaded %s" % upload_name)
+except Exception:
+    log.exception("Error during upload of db backups.")
+    sys.exit()
+
+try:
+    for file in os.listdir(BACKUP_MINECRAFT_WORLD_DIR):
+        if file == "backups.json":
+            continue
+        upload_name = "world/%s" % file
+        with open("%s/%s" % (BACKUP_MINECRAFT_WORLD_DIR, file), 'rb') as content:
+            swift.put_object(MINECRAFT_CONTAINER_NAME, upload_name, content)
+        os.remove("%s/%s" % (BACKUP_MINECRAFT_WORLD_DIR, file))
+        log.info("Uploaded %s" % upload_name)
+except Exception:
+    log.exception("Error during upload of minecraft world backups.")
+    sys.exit()
+
+try:
+    for file in os.listdir(BACKUP_MINECRAFT_JSON_DIR):
+        upload_name = "json/%s" % file
+        with open("%s/%s" % (BACKUP_MINECRAFT_JSON_DIR, file), 'rb') as content:
+            swift.put_object(MINECRAFT_CONTAINER_NAME, upload_name, content)
+        os.remove("%s/%s" % (BACKUP_MINECRAFT_JSON_DIR, file))
+        log.info("Uploaded %s" % upload_name)
+except Exception:
+    log.exception("Error during upload of minecraft json backups.")
+    sys.exit()

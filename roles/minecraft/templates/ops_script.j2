@@ -1,0 +1,35 @@
+import json
+
+default_ops = [
+{% for op in minecraft_default_ops %}
+    {
+    {% for key, value in op.items() %}
+      {% if key == "level" or key == "bypassesPlayerLimit" %}
+        '{{ key }}': {{ value }},
+      {% else %}
+        '{{ key }}': '{{ value }}',
+      {% endif %}
+    {% endfor %}
+    },
+{% endfor %}
+]
+
+try:
+    with open('ops.json') as f:
+        ops = json.load(f)
+except IOError:
+    ops = []
+
+
+for d_op in default_ops:
+    found = False
+    for op in ops:
+        if op['name'] == d_op['name']:
+            op.update(d_op)
+            found = True
+    if not found:
+        ops.append(d_op)
+
+if default_ops:
+    with open('ops.json', "w") as f:
+        f.write(json.dumps(ops))
