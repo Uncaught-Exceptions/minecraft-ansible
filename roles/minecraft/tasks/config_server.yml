@@ -5,11 +5,9 @@
             dest={{ minecraft_server_folder }}/settings-local.sh
 
 - name: agree to the eula
-  lineinfile:
-    path: "{{ minecraft_server_folder }}/eula.txt"
-    regexp: '^eula=false'
-    line: 'eula=true'
-    backrefs: yes
+  copy:
+    content: "eula=true\n"
+    dest: "{{ minecraft_server_folder }}/eula.txt"
 
 - name: Setup server properties
   template: src=server_properties.j2

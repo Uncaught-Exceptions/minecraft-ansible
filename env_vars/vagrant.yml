@@ -2,6 +2,7 @@
 
 # Minecraft server settings:
 ftb_server_download_url: https://addons-origin.cursecdn.com/files/2427/717/FTBBeyondServer_1.8.1.zip
+# local_minecraft_server_file: FTBBeyondServer_1.8.1.zip
 minecraft_server_icon: tailored_server.png
 
 minecraft_default_ops:
@@ -20,7 +21,7 @@ minecraft_world_backups_timer: 5.5
 minecraft_world_backups_compression_level: 1
 
 backup_minecraft_json: true
-backup_minecraft_to_object_storage: true
+backup_minecraft_to_object_storage: false
 
 
 # object-storage settings
@@ -40,7 +41,7 @@ db_password: password
 
 # Setup db cron dump job:
 db_backup_database_job: true
-db_backup_database_to_object_storage: true
+db_backup_database_to_object_storage: false
 
 
 # Gunicorn settings. For the number of workers, a good rule to follow is
@@ -54,8 +55,8 @@ nginx_strong_dh_group: no
 
 
 # Application settings.
-object_storage_for_media: true
-object_storage_for_static: true
+object_storage_for_media: false
+object_storage_for_static: false
 
 django_debug: "True"
 django_secret_key: "akr2icmg1n8%z^3fe3c+)5d0(t^cy-2_25rrl35a7@!scna^1#"

@@ -1,6 +1,6 @@
 ---
 
-- name: Provision a Minecraft server
+- name: Provision a Minecraft server on a Vagrant box
   hosts: all
   become: yes
   become_user: root
