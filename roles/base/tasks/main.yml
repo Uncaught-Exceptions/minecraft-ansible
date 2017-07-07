@@ -50,6 +50,10 @@
 - name: Create the logs group
   group: name={{ logging_group }} system=yes state=present
 
+- name: Add the server user to the logging group
+  when: server_user is defined and server_user
+  user: name={{ server_user is defined }} groups={{ logging_group }} append=yes
+
 - name: create base folder
   file:
     path: "{{ base_folder }}"
