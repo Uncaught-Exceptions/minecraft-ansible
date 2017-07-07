@@ -23,6 +23,11 @@ minecraft_world_backups_compression_level: 1
 backup_minecraft_json: true
 backup_minecraft_to_object_storage: false
 
+configure_mods:
+    opengliders:
+        src: openglider.cfg
+        dest: openglider.cfg
+
 
 # object-storage settings
 swift_username: "demo"
