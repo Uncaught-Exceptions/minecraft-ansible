@@ -26,9 +26,9 @@
 
 - name: copy FTB server from local
   unarchive:
-    src: "files/{{ minecraft_local_server_file }}"
+    src: "files/{{ local_minecraft_server_file }}"
     dest: "{{ minecraft_server_folder }}"
-  when: minecraft_local_server_file is defined and minecraft_local_server_file
+  when: local_minecraft_server_file is defined and local_minecraft_server_file
   register: server_copied
 
 - name: setup install file as executable

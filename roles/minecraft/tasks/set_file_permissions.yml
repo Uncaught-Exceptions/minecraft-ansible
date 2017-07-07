@@ -1,5 +1,10 @@
 ---
 
+- name: ensure group access to whitelist.json
+  file:
+    path: "{{ minecraft_whitelist_file }}"
+    state: touch
+
 - name: Ensure that the minecraft file permissions are set properly
   file: path={{ minecraft_server_folder }}
         recurse=yes
