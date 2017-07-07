@@ -4,4 +4,4 @@ minedash_git_repo: https://github.com/uncaught-exceptions/minedash.git
 
 # Git settings.
 setup_git_repo: yes
-git_branch: master
+minedash_git_branch: master
