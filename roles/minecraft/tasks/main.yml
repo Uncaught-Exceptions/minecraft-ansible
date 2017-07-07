@@ -15,6 +15,9 @@
 - include: config_server.yml
   tags: minecraft
 
+- include: config_mods.yml
+  tags: minecraft
+
 - include: config_supervisor.yml
   tags: minecraft
 

@@ -1,0 +1,11 @@
+---
+
+- name: drop in mod configuration files
+  when: configure_mods is defined and configure_mods
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ minecraft_server_folder }}/config/{{ item.dest }}"
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_group }}"
+    mode: 0644
+  with_items: "{{ configure_mods }}"
