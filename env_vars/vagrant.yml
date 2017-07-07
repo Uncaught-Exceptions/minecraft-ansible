@@ -24,10 +24,16 @@ backup_minecraft_json: true
 backup_minecraft_to_object_storage: false
 
 configure_mods:
-    opengliders:
-        src: openglider.cfg
-        dest: openglider.cfg
+  # some example mod
+  - src: example_mod.cfg
+    dest: example_mod.cfg
+  # # some other mod
+  # - src: example_mod.cfg
+  #   dest: example_mod.cfg
 
+# additional_mods:
+#   - src: vivecraft.jar
+#     dest: vivecraft.jar
 
 # object-storage settings
 swift_username: "demo"
